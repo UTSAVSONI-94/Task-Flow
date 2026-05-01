@@ -39,13 +39,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [fetchUser]);
 
   const login = async (email: string, password: string) => {
-    const { data } = await authApi.login({ email, password });
+    const response = await authApi.login({ email, password });
+    const data = response.data;
+    
+    if (!data || !data.data || !data.data.accessToken) {
+      console.error("Invalid response format:", data);
+      throw { response: { data: { message: `Backend responded with invalid format. Response: ${JSON.stringify(data).substring(0, 100)}` } } };
+    }
+    
     localStorage.setItem('accessToken', data.data.accessToken);
     setUser(data.data.user);
   };
 
   const register = async (name: string, email: string, password: string) => {
-    const { data } = await authApi.register({ name, email, password });
+    const response = await authApi.register({ name, email, password });
+    const data = response.data;
+    
+    if (!data || !data.data || !data.data.accessToken) {
+      console.error("Invalid response format:", data);
+      throw { response: { data: { message: `Backend responded with invalid format. Response: ${JSON.stringify(data).substring(0, 100)}` } } };
+    }
+    
     localStorage.setItem('accessToken', data.data.accessToken);
     setUser(data.data.user);
   };
