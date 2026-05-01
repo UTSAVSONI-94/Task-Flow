@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Hardcode the backend URL to completely bypass the Railway variables tab!
-const backendUrl = "https://task-flow-production.up.railway.app";
+// Read the VITE_API_URL or BACKEND_URL from runtime env
+const backendUrl = process.env.VITE_API_URL || process.env.BACKEND_URL;
 
 if (backendUrl) {
   // Automatically strip any trailing '/api' from the backendUrl since we are proxying '/api'
