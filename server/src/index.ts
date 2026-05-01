@@ -42,17 +42,24 @@ app.use(errorHandler);
 async function start() {
   let uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/taskflow';
 
-  // Try connecting to the configured MongoDB first
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 3000 });
-    console.log('✅ Connected to MongoDB');
-  } catch {
-    // Fallback to in-memory MongoDB
-    console.log('⚠️  MongoDB not available, starting in-memory server...');
-    const mongod = await MongoMemoryServer.create();
-    uri = mongod.getUri();
-    await mongoose.connect(uri);
-    console.log('✅ Connected to in-memory MongoDB');
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    console.log('✅ Connected to MongoDB Atlas');
+  } catch (error: any) {
+    console.log('⚠️  Failed to connect to MongoDB Atlas. Error:', error.message);
+    
+    // Only fallback to memory server in local development
+    if (process.env.NODE_ENV !== 'production' && !process.env.MONGODB_URI) {
+      console.log('⚠️  Starting in-memory server for local development...');
+      const mongod = await MongoMemoryServer.create();
+      uri = mongod.getUri();
+      await mongoose.connect(uri);
+      console.log('✅ Connected to in-memory MongoDB');
+    } else {
+      console.error('❌ CRITICAL: Cannot connect to MongoDB in production.');
+      console.error('👉 Ensure your MongoDB Atlas Network Access is set to 0.0.0.0/0 (Allow Access from Anywhere)');
+      process.exit(1);
+    }
   }
 
   app.listen(Number(PORT), '0.0.0.0', () => {
