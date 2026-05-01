@@ -5,6 +5,10 @@ import axios from 'axios';
 // which causes the frontend static server to return index.html for API requests!
 const backendUrl = import.meta.env.VITE_API_URL;
 
+console.log("=== DIAGNOSTICS ===");
+console.log("VITE_API_URL baked into this build:", backendUrl);
+console.log("===================");
+
 if (!backendUrl) {
   console.error("CRITICAL ERROR: VITE_API_URL is missing! You must set VITE_API_URL in your Railway Frontend Variables and trigger a rebuild.");
 }
