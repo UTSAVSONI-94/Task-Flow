@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+}
 import 'express-async-errors';
 import express from 'express';
 import cors from 'cors';
@@ -40,6 +42,10 @@ app.get('/api/health', (req, res) => {
 app.use(errorHandler);
 
 async function start() {
+  console.log('--- STARTUP DIAGNOSTICS ---');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('MONGODB_URI SET?', process.env.MONGODB_URI ? 'YES' : 'NO');
+  console.log('---------------------------');
   let uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/taskflow';
 
   try {
