@@ -7,8 +7,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "install": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm install; else cd server && npm install; fi",
-    "build": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm run build; else cd server && npm run build; fi",
-    "start": "if [ \"$IS_FRONTEND\" = \"true\" ]; then npm install -g serve && serve -s client/dist -p ${PORT:-8080}; else cd server && npm start; fi"
+    "install": "if [ -n \"$VITE_API_URL\" ]; then cd client && npm install; else cd server && npm install; fi",
+    "build": "if [ -n \"$VITE_API_URL\" ]; then cd client && npm run build; else cd server && npm run build; fi",
+    "start": "if [ -n \"$VITE_API_URL\" ]; then npm install -g serve && serve -s client/dist -p ${PORT:-8080}; else cd server && npm start; fi"
   }
 }
