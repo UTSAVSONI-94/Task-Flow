@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// @ts-ignore
+const backendUrl = typeof window !== 'undefined' && window.ENV && window.ENV.BACKEND_URL !== '__BACKEND_URL_PLACEHOLDER__' 
+  ? window.ENV.BACKEND_URL 
+  : import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: backendUrl.endsWith('/api') ? backendUrl : `${backendUrl}/api`,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -53,7 +58,8 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
+        const refreshUrl = backendUrl.endsWith('/api') ? `${backendUrl}/auth/refresh` : `${backendUrl}/api/auth/refresh`;
+        const { data } = await axios.post(refreshUrl, {}, { withCredentials: true });
         const newToken = data.data.accessToken;
         localStorage.setItem('accessToken', newToken);
         api.defaults.headers.common.Authorization = `Bearer ${newToken}`;
