@@ -37,7 +37,12 @@ if (backendUrl) {
     })
   );
 } else {
-  console.warn("WARNING: VITE_API_URL is not set. API proxy will not work!");
+  console.warn("WARNING: VITE_API_URL and BACKEND_URL are not set. API proxy will not work!");
+  app.use('/api', (req, res) => {
+    res.status(500).json({ 
+      message: "CRITICAL ERROR: You must add the BACKEND_URL variable to your Railway Frontend Variables tab! The proxy has no idea where to send your data." 
+    });
+  });
 }
 
 // Serve static files from the React build
