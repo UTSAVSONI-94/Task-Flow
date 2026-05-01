@@ -23,6 +23,17 @@ if (backendUrl) {
       target,
       changeOrigin: true,
       secure: false, // Bypass SSL cert errors
+      onError: (err, req, res) => {
+        console.error('Proxy Error:', err);
+        res.status(500).json({ 
+          message: `RAILWAY PROXY ERROR: Could not connect to backend at ${target}. Details: ${err.message}` 
+        });
+      },
+      onProxyRes: (proxyRes, req, res) => {
+        if (proxyRes.statusCode >= 400) {
+          console.warn(`Backend returned error ${proxyRes.statusCode} for ${req.url}`);
+        }
+      }
     })
   );
 } else {
