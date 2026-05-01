@@ -1,12 +1,16 @@
 import axios from 'axios';
 
-// @ts-ignore
-const backendUrl = typeof window !== 'undefined' && (window as any).ENV && (window as any).ENV.BACKEND_URL !== '__BACKEND_URL_PLACEHOLDER__' 
-  ? (window as any).ENV.BACKEND_URL 
-  : import.meta.env.VITE_API_URL || '/api';
+// We strictly rely on the Vite build process to inject the backend URL.
+// If it's missing, we throw a clear error instead of silently falling back to relative paths
+// which causes the frontend static server to return index.html for API requests!
+const backendUrl = import.meta.env.VITE_API_URL;
+
+if (!backendUrl) {
+  console.error("CRITICAL ERROR: VITE_API_URL is missing! You must set VITE_API_URL in your Railway Frontend Variables and trigger a rebuild.");
+}
 
 const api = axios.create({
-  baseURL: backendUrl.endsWith('/api') ? backendUrl : `${backendUrl}/api`,
+  baseURL: backendUrl && backendUrl.endsWith('/api') ? backendUrl : `${backendUrl}/api`,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -58,7 +62,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshUrl = backendUrl.endsWith('/api') ? `${backendUrl}/auth/refresh` : `${backendUrl}/api/auth/refresh`;
+        const refreshUrl = backendUrl && backendUrl.endsWith('/api') ? `${backendUrl}/auth/refresh` : `${backendUrl}/api/auth/refresh`;
         const { data } = await axios.post(refreshUrl, {}, { withCredentials: true });
         const newToken = data.data.accessToken;
         localStorage.setItem('accessToken', newToken);
