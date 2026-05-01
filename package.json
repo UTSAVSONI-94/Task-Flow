@@ -7,7 +7,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "install": "echo 'Root install complete'",
-    "build": "echo 'Please use custom build commands for server and client'"
+    "install": "cd server && npm install",
+    "build": "cd server && npm run build",
+    "start": "cd server && npm start"
   }
 }
