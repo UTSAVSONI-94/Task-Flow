@@ -3,10 +3,16 @@ import axios from 'axios';
 // We strictly rely on the Vite build process to inject the backend URL.
 // If it's missing, we throw a clear error instead of silently falling back to relative paths
 // which causes the frontend static server to return index.html for API requests!
-const backendUrl = import.meta.env.VITE_API_URL;
+let backendUrl = import.meta.env.VITE_API_URL;
+
+// Automatically fix the URL if the user forgot to add https://
+if (backendUrl && !backendUrl.startsWith('http')) {
+  backendUrl = `https://${backendUrl}`;
+}
 
 console.log("=== DIAGNOSTICS ===");
-console.log("VITE_API_URL baked into this build:", backendUrl);
+console.log("VITE_API_URL baked into this build:", import.meta.env.VITE_API_URL);
+console.log("Fixed Backend URL used by Axios:", backendUrl);
 console.log("===================");
 
 if (!backendUrl) {
