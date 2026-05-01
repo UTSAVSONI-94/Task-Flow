@@ -9,6 +9,6 @@
   "scripts": {
     "install": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm install; else cd server && npm install; fi",
     "build": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm run build; else cd server && npm run build; fi",
-    "start": "if [ \"$IS_FRONTEND\" = \"true\" ]; then npx serve -s client/dist -l ${PORT:-8080}; else cd server && npm start; fi"
+    "start": "if [ \"$IS_FRONTEND\" = \"true\" ]; then npx serve -s client/dist -l tcp://0.0.0.0:${PORT:-8080}; else cd server && npm start; fi"
   }
 }
