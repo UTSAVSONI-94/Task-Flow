@@ -4,7 +4,7 @@
   "private": true,
   "description": "TaskFlow Monorepo Root",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.19.0"
   },
   "scripts": {
     "install": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm install; else cd server && npm install; fi",
