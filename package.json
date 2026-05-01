@@ -1,0 +1,13 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TaskFlow Monorepo Root",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "install": "echo 'Root install complete'",
+    "build": "echo 'Please use custom build commands for server and client'"
+  }
+}
