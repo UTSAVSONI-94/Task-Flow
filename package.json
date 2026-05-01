@@ -7,8 +7,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "install": "cd server && npm install",
-    "build": "cd server && npm run build",
-    "start": "cd server && npm start"
+    "install": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm install; else cd server && npm install; fi",
+    "build": "if [ \"$IS_FRONTEND\" = \"true\" ]; then cd client && npm run build; else cd server && npm run build; fi",
+    "start": "if [ \"$IS_FRONTEND\" = \"true\" ]; then npm install -g serve && serve -s client/dist -p ${PORT:-8080}; else cd server && npm start; fi"
   }
 }
