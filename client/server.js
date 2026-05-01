@@ -1,12 +1,33 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// Read the VITE_API_URL or BACKEND_URL from runtime env
+const backendUrl = process.env.VITE_API_URL || process.env.BACKEND_URL;
+
+if (backendUrl) {
+  // Automatically strip any trailing '/api' from the backendUrl since we are proxying '/api'
+  const target = backendUrl.endsWith('/api') ? backendUrl.slice(0, -4) : backendUrl;
+  console.log(`Setting up proxy: /api -> ${target}`);
+  
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target,
+      changeOrigin: true,
+      secure: false, // Bypass SSL cert errors
+    })
+  );
+} else {
+  console.warn("WARNING: VITE_API_URL is not set. API proxy will not work!");
+}
 
 // Serve static files from the React build
 app.use(express.static(path.join(__dirname, 'dist')));
