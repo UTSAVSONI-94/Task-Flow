@@ -55,7 +55,7 @@ async function start() {
     console.log('✅ Connected to in-memory MongoDB');
   }
 
-  app.listen(PORT, () => {
+  app.listen(Number(PORT), '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
