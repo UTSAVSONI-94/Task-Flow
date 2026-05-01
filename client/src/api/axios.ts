@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // @ts-ignore
-const backendUrl = typeof window !== 'undefined' && window.ENV && window.ENV.BACKEND_URL !== '__BACKEND_URL_PLACEHOLDER__' 
-  ? window.ENV.BACKEND_URL 
+const backendUrl = typeof window !== 'undefined' && (window as any).ENV && (window as any).ENV.BACKEND_URL !== '__BACKEND_URL_PLACEHOLDER__' 
+  ? (window as any).ENV.BACKEND_URL 
   : import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
